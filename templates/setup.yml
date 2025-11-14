@@ -313,6 +313,10 @@
     - role: galaxy/gotosocial
     # /role-specific:gotosocial
 
+    # role-specific:gowa
+    - role: gluecode/gowa
+    # /role-specific:gowa
+
     # role-specific:grafana
     - role: galaxy/grafana
     # /role-specific:grafana

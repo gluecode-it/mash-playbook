@@ -248,6 +248,10 @@
   version: v0.20.1-1
   name: gotosocial
   activation_prefix: gotosocial_
+- src: file://./roles/gluecode/ansible-role-gowa
+  version: latest
+  name: gowa
+  activation_prefix: gowa_
 - src: git+https://github.com/mother-of-all-self-hosting/ansible-role-grafana.git
   version: v11.6.5-4
   name: grafana
