@@ -9,6 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: alex-oleshkevich/setup-ansible@v1.0.1
+        with:
+          version: "11.12.0"
       - uses: extractions/setup-just@v3
       - run:  just optimize
       - run:  just roles
