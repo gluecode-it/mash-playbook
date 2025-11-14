@@ -16,6 +16,6 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
       - uses: extractions/setup-just@v3
-      - run:  just optimize
+      # - run:  just optimize
       - run:  just roles
       - run:  just setup-all
