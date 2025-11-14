@@ -1,0 +1,323 @@
+# SPDX-FileCopyrightText: 2023 - 2025 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2023 Julian-Samuel Gebühr
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+
+# Below is an example which installs a few services on the host, in different configuration.
+# You should tweak this example as you see fit and enable the services that you need.
+
+########################################################################
+#                                                                      #
+# Playbook                                                             #
+#                                                                      #
+########################################################################
+
+# Put a strong secret below, generated with `pwgen -s 64 1` or in another way
+# Various other secrets will be derived from this secret automatically.
+mash_playbook_generic_secret_key: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  31366138326332333265616434653634356637306664663235383161646237373738393231356332
+  6530613638316365663130376530363564656530346366390a323938343633323734613262626164
+  63373234646265356533653636363339306364363638626438373631636361613961386238616538
+  6461346566353030620a333232623530643331653537383636336265333538373063383663643334
+  62663537343037346564363339666137323338333361373530633138376133613537333466376138
+  33343639343961333333646639336438363666373131636437376230383538336539386637313665
+  39643163346538393539326236313161303862383433636137353139366636316533363432373430
+  32353131333730316161
+
+########################################################################
+#                                                                      #
+# /Playbook                                                            #
+#                                                                      #
+########################################################################
+
+
+########################################################################
+#                                                                      #
+# Docker                                                               #
+#                                                                      #
+########################################################################
+
+# To disable Docker installation (in case you'd be installing Docker in another way),
+# remove the line below.
+mash_playbook_docker_installation_enabled: true
+
+# To disable Docker SDK for Python installation (in case you'd be installing the SDK in another way),
+# remove the line below.
+devture_docker_sdk_for_python_installation_enabled: true
+
+# Controls whether container networks will be created with IPv6 support.
+#
+# If you also have IPv6 support on your server/network and AAAA DNS records pointing to the server,
+# enabling this will effectively give you full public IPv6 connectivity (powered by NAT66).
+#
+# We recommend leaving this enabled even if you don't currently have IPv6 connectivity on your server/network.
+# This way, once you eventually get IPv6 connectivity, you won't have to change anything (besides DNS records).
+#
+# Flipping this setting later on requires manual work (stopping services, deleting and recreating all container networks).
+#
+# In the future, this setting will likely default to `true`, so if you really want IPv6 disabled, explicitly set this to `false`.
+#
+# People managing Docker themselves and running an older Docker version will need additional configuration.
+#
+# Learn more in `docs/configuring-ipv6.md`.
+devture_systemd_docker_base_ipv6_enabled: true
+
+########################################################################
+#                                                                      #
+# /Docker                                                              #
+#                                                                      #
+########################################################################
+
+
+########################################################################
+#                                                                      #
+# gluecode                                                             #
+#                                                                      #
+########################################################################
+
+base_domain: gluecode.dev
+base_timezone: Europe/Berlin
+
+########################################################################
+#                                                                      #
+# /gluecode                                                            #
+#                                                                      #
+########################################################################
+
+########################################################################
+#                                                                      #
+# postgres                                                             #
+#                                                                      #
+########################################################################
+
+postgres_enabled: true
+
+# Put a strong password below, generated with `pwgen -s 64 1` or in another way
+postgres_connection_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  62376537666431323365353066646530663539633335616534626630643532303366626164376265
+  3334356130366262633932343032633563396261616137640a356362383632333538313134313736
+  38353032373661616266343762636561653732333034333839366334666535313161646334643361
+  3833323832393666370a663335656334343662336461636365626134306530666534643662636363
+  66386232643133376563656239656139623138653832663462336435353864613330343534663230
+  63613665366136373837626661666261646461386633646137363963643537653265363835343630
+  64343738653337633036333231343534643062623064303036643431313665653136643136383039
+  38663237373134323336
+
+########################################################################
+#                                                                      #
+# /postgres                                                            #
+#                                                                      #
+########################################################################
+
+########################################################################
+#                                                                      #
+# convertx                                                             #
+#                                                                      #
+########################################################################
+
+convertx_enabled: true
+
+convertx_hostname: convertx.{{ base_domain }}
+convertx_environment_variables_webroot: /
+
+########################################################################
+#                                                                      #
+# /convertx                                                            #
+#                                                                      #
+########################################################################
+
+########################################################################
+#                                                                      #
+# gowa                                                             #
+#                                                                      #
+########################################################################
+
+gowa_enabled: true
+gowa_hostname: gowa.{{ base_domain }}
+gowa_container_environment_webhook: "https://{{ n8n_hostname }}/webhook/bc6fb443-cf3c-44a4-b2aa-2d4ded8bcfd2?secret=ahc6zielie3ahpee1sahpheiy7phe9iezohloorapootheiquich9aisaerahr4i"
+
+########################################################################
+#                                                                      #
+# /gowa                                                            #
+#                                                                      #
+########################################################################
+
+########################################################################
+#                                                                      #
+# languagetool                                                         #
+#                                                                      #
+########################################################################
+
+languagetool_enabled: true
+
+languagetool_hostname: languagetool.{{ base_domain }}
+languagetool_path_prefix: /
+
+########################################################################
+#                                                                      #
+# /languagetool                                                        #
+#                                                                      #
+########################################################################
+
+########################################################################
+#                                                                      #
+# n8n                                                                  #
+#                                                                      #
+########################################################################
+
+n8n_enabled: true
+n8n_hostname: "n8n.{{ base_domain}}"
+n8n_timezone: "{{ base_timezone }}"
+
+########################################################################
+#                                                                      #
+# /n8n                                                                 #
+#                                                                      #
+########################################################################
+
+########################################################################
+#                                                                      #
+# paperless                                                            #
+#                                                                      #
+########################################################################
+
+# paperless_enabled: true
+# paperless_hostname: paperless.{{ base_domain }}
+
+# Set the following variables to create an initial admin user
+# It will not re-create an admin user, it will not change a password if the user is already created
+# paperless_admin_user: USERNAME
+# paperless_admin_password: SECURE_PASSWORD
+
+# Valkey configuration, as described below
+
+########################################################################
+#                                                                      #
+# /paperless                                                           #
+#                                                                      #
+########################################################################
+
+########################################################################
+#                                                                      #
+# rssbridge                                                            #
+#                                                                      #
+########################################################################
+
+rssbridge_enabled: true
+rssbridge_hostname: rssbridge.{{ base_domain }}
+
+# Enable token authentication
+rssbridge_config_authentication_token: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  65303263653935633763363764313336366364393939643730663437373137306266616633363563
+  6663346364656139346533643261643432393034363061360a666165393730313933353063303162
+  37653639363233326530623035373664653833323061393863386465303438623061623065626130
+  3335616232613666300a383566393836653330353935323864643061343639363638396630633964
+  62313434353635353837376562323066333238323634353565383961316265373065343065353131
+  36323666326132316166303663323739643461313561336638303732613661643630666339333938
+  30333537313766323561343931363666333832633463636232326339376339366463373862306136
+  37323565626237303834
+
+########################################################################
+#                                                                      #
+# /rssbridge                                                           #
+#                                                                      #
+
+########################################################################
+#                                                                      #
+# com.devture.ansible.role.timesync                                    #
+#                                                                      #
+########################################################################
+
+# To ensure the server's clock is synchronized (using systemd-timesyncd/ntpd),
+# we enable the timesync service.
+
+devture_timesync_installation_enabled: true
+
+########################################################################
+#                                                                      #
+# /com.devture.ansible.role.timesync                                   #
+#                                                                      #
+########################################################################
+
+########################################################################
+#                                                                      #
+# semaphore                                                            #
+#                                                                      #
+########################################################################
+
+semaphore_enabled: true
+
+semaphore_hostname: semaphore.{{ base_domain }}
+semaphore_container_image_customizations_just_installation_enabled: true
+semaphore_container_image_customizations_packages_to_install_custom: [ "py3-regex" ]
+
+semaphore_access_key_encryption: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  64396531336432363534383065383133643632306535613763393163323631666166613836333839
+  6338316532323638396530343132613764363736393562640a333339623933363066343031633661
+  34323462303265666463333736333336626536303333653739653038363135313562633637653433
+  6134623736636463340a623131613465393432303331333534356431376537323564633263636465
+  35393261633437636663326631323363393162633031663135313362313366643661316334663137
+  3835613862353166383735613933666465643135613363313962
+semaphore_environment_variables_tmp_path: /repos
+
+semaphore_admin_username: admin
+semaphore_admin_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  33356666353337353363316432613865336335616666613530626335343638386463356435643364
+  6633303466336365346533316236626565663439363763340a336665316137346133326539623639
+  36653638376565643934376437313032346331313630363361373239386135623438333432623163
+  3766393264366466300a316438633139643732316136383463646661376635633636376533626633
+  34633966373637653865383737313235653737316466613565623563613131316534
+semaphore_admin_name: Admin
+semaphore_admin_email: oliver@{{ base_domain }}
+
+########################################################################
+#                                                                      #
+# /semaphore                                                           #
+#                                                                      #
+########################################################################
+
+
+########################################################################
+#                                                                      #
+# traefik                                                              #
+#                                                                      #
+########################################################################
+
+# Most services require a reverse-proxy, so we enable Traefik here.
+#
+# Learn more about the Traefik service in docs/services/traefik.md
+#
+# If your server already runs Traefik, you will run into port conflicts by installing it twice.
+# See docs/interoperability.md for solutions.
+
+mash_playbook_reverse_proxy_type: playbook-managed-traefik
+
+traefik_config_entrypoint_web_to_web_secure_redirection_enabled: false
+
+traefik_dashboard_enabled: true
+traefik_dashboard_hostname: traefik.mash.{{ base_domain }}
+traefik_dashboard_basicauth_enabled: true
+traefik_dashboard_basicauth_user: dashboard
+traefik_dashboard_basicauth_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  39383465376235373561376536363630656337343663346332623539653164303235363138613130
+  3138623962343637316337643261316561386333386638370a353763383732633830333936333065
+  39353530383463613135383438653130313233316433386662386634356233626365316561663534
+  3736643265623931390a363164653361373332323433396235616234626266666661346433343066
+  65316232386465393337376666666532393632626437333039393430666136353835333264316162
+  38623363666430613634303936326136306335663736306666363433633639646535383739616632
+  65663663613063313161326561666332613337366138393265626164633431393762333735636638
+  32383961313736303631
+
+########################################################################
+#                                                                      #
+# /traefik                                                             #
+#                                                                      #
+########################################################################
