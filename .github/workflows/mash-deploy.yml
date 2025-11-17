@@ -15,6 +15,14 @@ jobs:
       - uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
+      - name: Download and install agru
+        run: |
+          curl -L \
+            https://github.com/etkecc/agru/releases/download/v0.1.18/agru_Linux_x86_64.tar.gz \
+            -o agru_Linux_x86_64.tar.gz
+          tar -xzf agru_Linux_x86_64.tar.gz
+          chmod +x agru
+          echo "$PWD" >> "$GITHUB_PATH"
       - uses: extractions/setup-just@v3
       # - run:  just optimize
       - run:  just roles
