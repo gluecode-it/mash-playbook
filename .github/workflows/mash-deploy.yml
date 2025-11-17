@@ -2,6 +2,20 @@
 name: 'Deploy'
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Host"
+        required: true
+        default: "mash.gluecode.dev"
+        type: choice
+        options:
+          - mash.gluecode.dev
+
+      dry_run:
+        description: "Nur testen?"
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   action:
@@ -10,7 +24,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: alex-oleshkevich/setup-ansible@v1.0.1
         with:
-          version: "11.12.0"
+          version: "12.2.0"
       - run: python -m pip install "regex"
       - name: Download and install agru
         run: |
