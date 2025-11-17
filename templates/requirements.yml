@@ -248,8 +248,8 @@
   version: v0.20.1-1
   name: gotosocial
   activation_prefix: gotosocial_
-- src: git+file://./roles/gluecode/gowa
-  version: latest
+- src: git+https://github.com/oliverlorenz/ansible-role-gowa.git
+  version: v0.0.1
   name: gowa
   activation_prefix: gowa_
 - src: git+https://github.com/mother-of-all-self-hosting/ansible-role-grafana.git
