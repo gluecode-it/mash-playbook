@@ -24,14 +24,15 @@ jobs:
       - uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
-      - run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_PRIVATE_KEY" > ../private.key
-          sudo chmod 600 ../private.key
-        shell: bash
-        env:
-          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-          SSH_KEY_PATH: ${{ github.workspace }}/../private.key
+      - name: Add SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+          # Optional: known_hosts damit SSH nicht interaktiv fragt
+          ssh-keyscan -H mash.gluecode.dev >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
       - run:  just optimize
       - run:  just roles
       - run:  ANSIBLE_HOST_KEY_CHECKING=False just setup-all
