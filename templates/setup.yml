@@ -314,7 +314,7 @@
     # /role-specific:gotosocial
 
     # role-specific:gowa
-    - role: gluecode/gowa
+    - role: galaxy/gowa
     # /role-specific:gowa
 
     # role-specific:grafana
