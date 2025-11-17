@@ -12,9 +12,6 @@ jobs:
         with:
           version: "11.12.0"
       - run: python -m pip install "regex"
-      - uses: oNaiPs/secrets-to-env-action@v1
-        with:
-          secrets: ${{ toJSON(secrets) }}
       - name: Download and install agru
         run: |
           curl -L \
@@ -24,6 +21,9 @@ jobs:
           chmod +x agru
           echo "$PWD" >> "$GITHUB_PATH"
       - uses: extractions/setup-just@v3
+      - uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
       - run:  just optimize
       - run:  just roles
-      - run:  just setup-all
+      - run:  ANSIBLE_HOST_KEY_CHECKING=False just setup-all
