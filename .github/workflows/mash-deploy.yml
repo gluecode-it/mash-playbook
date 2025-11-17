@@ -24,6 +24,15 @@ jobs:
       - uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
+      - name: Create SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ../private.key
+          sudo chmod 600 ../private.key
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+          SSH_KEY_PATH: ${{ github.workspace }}/../private.key
       - run:  just optimize
       - run:  just roles
       - run:  ANSIBLE_HOST_KEY_CHECKING=False just setup-all
